@@ -1,0 +1,51 @@
+---
+- hosts: all
+  tasks:
+    - name: Arch install media check
+      fail:
+        msg: "This host is not booted from the arch install media!"
+      when: ansible_nodename != "archiso"
+      tags:
+        - failed_media_check
+
+    # - name: Set console keyboard layout
+    # - name: Verify boot mode
+    # - name: Connect to internet
+    
+    - name: Update system clock
+      command: timedatectl set-ntp true
+      tags:
+        - update_clock
+
+    # - name: Wipe and partition disks
+    # - name: Format partitions
+    # - name: Mount filesystems
+    # - name: Select mirrors
+    # - name: Install essential packages
+    # - name: Generate fstab
+    # - name: Set timezone
+    # - name: Localization
+    # - name: Generate adjtime file
+    # - name: Setup locales
+    # - name: Network configuration
+    # - name: Set hostname
+    # - name: Setup netctl
+    # - name: Enable SSHD
+    # - name: Set up initramfs
+    # - name: Set root password
+    # - name: Setup boot loader
+    # - name: Setup user accounts
+    # - name: Give passwordless sudo access to wheel group
+    # - name: Install AUR helper
+    # - name: Unmount partitions
+
+- hosts: all
+  tasks:
+    - name: Reboot
+      reboot:
+        connect_timeout: 1
+        reboot_timeout: 1
+      failed_when: false
+      when: false # change to false to disable this task
+      tags:
+        - reboot
