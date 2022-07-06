@@ -8,7 +8,10 @@
       tags:
         - failed_media_check
 
-    # - name: Set console keyboard layout
+    - name: Set console keyboard layout
+      command: loadkeys uk
+      tags:
+        - keyboard_layout
     # - name: Verify boot mode
     # - name: Connect to internet
     
