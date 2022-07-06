@@ -3,16 +3,24 @@
   tasks:
     - name: Arch install media check
       fail:
-        msg: "This host is not booted from the arch install media!"
+        msg: "The host is not booted from the arch install media."
       when: ansible_nodename != "archiso"
       tags:
-        - failed_media_check
+        - media_check
 
     - name: Set console keyboard layout
       command: loadkeys uk
       tags:
         - keyboard_layout
-    # - name: Verify boot mode
+
+    - name: Verify UEFI boot mode
+      stat:
+        path: /sys/firmware/efi/efivars/
+      register: file_info
+      failed_when: not file_info.stat.exists
+      tags:
+        - boot_mode
+
     # - name: Connect to internet
     
     - name: Update system clock
