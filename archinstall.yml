@@ -28,9 +28,120 @@
       tags:
         - update_clock
 
-    # - name: Wipe and partition disks
-    # - name: Format partitions
-    # - name: Mount filesystems
+    - name: Partition disks
+      block:
+
+        - name: Create boot partition
+          parted:
+            device: '{{ install_drive }}'
+            label: gpt
+            number: 1
+            part_end: 512MB
+            name: boot
+            flags: [boot, esp]
+            state: present
+
+        - name: Create root partition
+          parted:
+            device: '{{ install_drive }}'
+            label: gpt
+            number: 2
+            part_start: 512MB
+            name: root
+            flags: []
+            state: present
+      tags:
+        - paritition_disks
+
+    - name: Format partitions
+      block:
+        # TODO: Iterate over all mountpoints under /mnt?
+        - name: Ensure btrfs subvolumes are unmounted
+          mount:
+            path: /mnt/{{ item.path }}
+            src: "{{ root_part }}"
+            fstype: btrfs
+            opts: "compress=zstd,discard=async,subvol={{ item.subvolume }}"
+            state: unmounted
+          loop: "{{ btrfs.subvolumes }}"
+
+        - name: Ensure /mnt is unmounted
+          mount:
+            path: /mnt
+            state: unmounted
+
+        - name: Format /boot as FAT32
+          filesystem:
+            dev: '{{ boot_part }}'
+            fstype: vfat
+            opts: -F32
+            force: yes
+
+        - name: Format / as btrfs
+          filesystem:
+            dev: '{{ root_part }}'
+            fstype: btrfs
+            force: yes
+      tags:
+        - format_partitions
+
+    - name: Create btrfs subvolumes
+      block:
+
+        - name: Mount root btrfs partition as /mnt
+          mount:
+            path: /mnt
+            src: '{{ root_part }}'
+            fstype: btrfs
+            state: mounted
+
+        - name: Create root btrfs subvolume
+          command: btrfs subvolume create /mnt/@
+
+        - name: Create btrfs subvolumes
+          command: btrfs subvolume create /mnt/{{ item.subvolume }}
+          loop: "{{ btrfs.subvolumes }}"
+
+        - name: Unmount /mnt
+          mount:
+            path: /mnt
+            state: unmounted
+
+    - name: Mount filesystems
+      block:
+        - name: Mount root btrfs subvolume
+          mount:
+            path: /mnt
+            src: "{{ root_part }}"
+            fstype: btrfs
+            opts: "compress=zstd,discard=async,subvol=@"
+            state: mounted
+
+        - name: Mount btrfs subvolumes
+          mount:
+            path: /mnt/{{ item.path }}
+            src: "{{ root_part }}"
+            fstype: btrfs
+            opts: "compress=zstd,discard=async,subvol={{ item.subvolume }}"
+            state: mounted
+          loop: "{{ btrfs.subvolumes }}"
+
+        - name: Create boot mountpoint
+          file:
+            path: /mnt/boot
+            state: directory
+
+        - name: Mount boot filesystem
+          mount:
+            path: /mnt/boot
+            src: "{{ boot_part }}"
+            fstype: vfat
+            state: mounted
+      tags:
+        - mount_filesystems
+
+    # - name: 
+
     # - name: Select mirrors
     # - name: Install essential packages
     # - name: Generate fstab

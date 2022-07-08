@@ -1,0 +1,26 @@
+---
+ansible_python_interpreter: /usr/bin/env python3
+ansible_user: root
+
+boot_part: "{{ install_drive }}1"
+root_part: "{{ install_drive }}2"
+
+timezone: Europe/London
+
+btrfs:
+  enabled: true
+  subvolumes:
+    - subvolume: "@snapshots"
+      path: "/.snapshosts"
+    - subvolume: "@home"
+      path: "/home"
+    - subvolume: "@log"
+      path: "/var/log"
+    - subvolume: "@cache"
+      path: "/var/cache"
+    - subvolume: "@tmp"
+      path: "/var/tmp"
+    # - subvolume: "@data"
+    #   path: "data"
+    #   disable_cow: true
+
