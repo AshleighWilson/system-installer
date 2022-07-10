@@ -5,6 +5,10 @@ ansible_user: root
 boot_part: "{{ install_drive }}1"
 root_part: "{{ install_drive }}2"
 
+user:
+  name: ashleigh
+  password: pass
+
 timezone: Europe/London
 
 btrfs:
@@ -18,9 +22,24 @@ btrfs:
       path: "/var/log"
     - subvolume: "@cache"
       path: "/var/cache"
-    - subvolume: "@tmp"
-      path: "/var/tmp"
+    # - subvolume: "@tmp"
+    #   path: "/var/tmp"
     # - subvolume: "@data"
     #   path: "data"
     #   disable_cow: true
 
+core_packages:
+  - base
+  - base-devel
+  - "{{ kernels }}"
+  - linux-firmware
+  - efibootmgr
+  - grub
+  - grub-btrfs
+  - sudo
+  - networkmanager
+  - neovim
+  - openssh
+  - btrfs-progs
+  - zsh
+  - git

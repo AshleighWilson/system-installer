@@ -65,6 +65,11 @@
             state: unmounted
           loop: "{{ btrfs.subvolumes }}"
 
+        - name: Ensure /mnt/boot is unmounted
+          mount:
+            path: /mnt/boot
+            state: unmounted
+
         - name: Ensure /mnt is unmounted
           mount:
             path: /mnt
@@ -140,23 +145,117 @@
       tags:
         - mount_filesystems
 
-    # - name: 
+    - name: Install base system
+      block:
 
-    # - name: Select mirrors
-    # - name: Install essential packages
-    # - name: Generate fstab
-    # - name: Set timezone
-    # - name: Localization
-    # - name: Generate adjtime file
-    # - name: Setup locales
-    # - name: Network configuration
-    # - name: Set hostname
-    # - name: Setup netctl
-    # - name: Enable SSHD
+        - name: Select fastest mirrors
+          command: reflector --save /etc/pacman.d/mirrorlist --country "United Kingdom" --protocol https --sort rate
+          tags:
+            select_mirrors
+
+        - name: Install base packages, kernel and firmware
+          command: pacstrap /mnt base {{ kernels}} linux-firmware {{ core_packages | join(' ') }}
+
+        - name: Install Intel microcode
+          command: arch-chroot /mnt pacman -S intel-ucode --noconfirm
+          when: ansible_processor[1].find('Intel') != -1
+
+        - name: Install AMD microcode
+          command: arch-chroot /mnt pacman -S amd-ucode --noconfirm
+          when: ansible_processor[1].find('AMD') != -1
+
+    - name: Configure base system
+      block:
+
+        - name: Generate fstab
+          shell: genfstab -U /mnt > /mnt/etc/fstab
+
+        - name: Set timezone
+          command: arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/London /etc/localtime
+
+        - name: Generate /etc/adjtime
+          command: arch-chroot /mnt hwclock --systohc
+
+        - name: Configure locale.gen
+          lineinfile:
+            dest: /mnt/etc/locale.gen
+            regexp: '{{ item.regex }}'
+            line: '{{ item.line }}'
+          loop:
+            - {regex: en_GB\.UTF-8 UTF-8, line: en_GB.UTF-8 UTF-8}
+
+        - name: Generate locales
+          command: arch-chroot /mnt locale-gen
+
+        - name: Create locale.conf
+          copy:
+            content: "LANG=en_GB.UTF-8"
+            dest: /mnt/etc/locale.conf
+
+        - name: Set console keyboard layout
+          copy:
+            content: "KEYMAP=uk"
+            dest: /mnt/etc/vconsole.conf
+
+        - name: Create the hostname file
+          copy:
+            content: "{{ hostname }}"
+            dest: /mnt/etc/hostname
+
+    - name: Enable services
+      block:
+      
+        - name: Enable NetworkManager on boot
+          command: arch-chroot /mnt systemctl enable NetworkManager
+
+        - name: Enable SSHD on boot
+          command: arch-chroot /mnt systemctl enable sshd
+    
+    - name: Install boot loader
+      block:
+
+        - name: Install grub
+          command: arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB-ARCH
+
+        - name: Create grub configuration
+          command: arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+
+    - name: Configure user
+      block:
+
+        - name: Delete bash configurations from /etc/skel
+          command: arch-chroot /mnt rm -rf /etc/skel/*(D)
+
+        - name: Setup user accounts
+          command: arch-chroot /mnt useradd -s /bin/zsh -m --user-group -G wheel {{ user.name }}
+
+        - name: Create user password
+          command: arch-chroot /mnt sh -c 'echo {{ user.name}}:{{ user.password }} | chpasswd'
+
+        - name: Create user's ssh directory
+          file:
+            path: /mnt/home/{{ user.name }}/.ssh
+            state: directory
+            mode: 0700
+
+        - name: Copy ssh keys
+          copy:
+            src: ~/.ssh/authorized_keys
+            dest: /mnt/home/{{ user.name }}/.ssh/
+            mode: 0600
+
+        - name: Set mode, owner and group for ssh keys
+          command: arch-chroot /mnt chown -R {{ user.name }}:{{ user.name }} /home/{{ user.name }}/.ssh/
+
+        - name: Give passwordless sudo access to wheel group
+          copy:
+            content: '%wheel ALL=(ALL) NOPASSWD: ALL'
+            dest: /mnt/etc/sudoers.d/wheel
+            validate: /usr/sbin/visudo --check --file=%s
+    
     # - name: Set up initramfs
     # - name: Set root password
-    # - name: Setup boot loader
-    # - name: Setup user accounts
+    # - name: Setup netctl
     # - name: Give passwordless sudo access to wheel group
     # - name: Install AUR helper
     # - name: Unmount partitions
