@@ -1,0 +1,26 @@
+---
+- name: Common configuration
+  block:
+
+    - name: Add yadm repository
+      yum_repository:
+        name: yadm
+        description: yadm repo
+        baseurl: https://download.opensuse.org/repositories/home:TheLocehiliosan:yadm/Fedora_Rawhide/
+        gpgcheck: no
+
+    - name: Add lazygit repository
+      community.general.copr:
+        name: atim/lazygit
+
+    - name: Install core software
+      dnf:
+        name: "{{ packages.core }}"
+        state: present
+        enablerepo: yadm
+
+    - name: Install core npm packages
+      npm:
+        name: "{{ item }}"
+        global: yes
+      loop: "{{ packages.core_npm }}"

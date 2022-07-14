@@ -1,0 +1,24 @@
+---
+- name: Create and configure users
+  block:
+
+    - name: Delete default /etc/skel files
+      file: path=/etc/skel state=absent
+
+    - name: Create user groups
+      group:
+        name: ashleigh
+        state: present
+        gid: 1000
+
+    - name: Create users
+      user:
+        name: ashleigh
+        comment: Ashleigh Wilson
+        uid: 1000
+        group: ashleigh
+        groups: wheel
+        append: yes
+        shell: /bin/zsh
+        password: $6$BHk8btTk/MWBZrq4$XPz1EEw2n/Yi4kvXovgjHkSY9Fx3apH3MrDFhHutWZgMi7GsO6jmEIqOH.zbeh6kug/dSxLRqmr36qxkwdgF8/
+

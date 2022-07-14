@@ -1,0 +1,18 @@
+---
+- name: Clone dotfiles and setup user directory
+  block:
+
+    - name: Clone dotfiles
+      command:
+        chdir: $HOME
+        cmd: yadm clone https://github.com/AshleighWilson/dotfiles.git
+        creates: $HOME/.local/share/yadm/repo.git/
+
+    - name: Clone dotfiles submodules
+      command:
+        chdir: $HOME
+        cmd: yadm submodule update --init
+        creates: $HOME/.local/share/zinit/zinit.zsh
+
+  become: true
+  become_user: ashleigh

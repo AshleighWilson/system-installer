@@ -1,0 +1,25 @@
+---
+- name: Docker
+  block:
+
+    - name: Add docker repository
+      yum_repository:
+        name: docker
+        description: docker repo
+        baseurl: https://download.docker.com/linux/fedora/36/x86_64/stable/
+        gpgcheck: no
+
+    - name: Add lazydocker repository
+      community.general.copr:
+        name: atim/lazydocker
+
+    - name: Install docker and utilities
+      dnf:
+        name: docker-compose, docker-ce, lazydocker
+        state: present
+        enablerepo: yadm
+
+    - name: Enable and start docker.service
+      systemd:
+        name: docker.service
+        state: started

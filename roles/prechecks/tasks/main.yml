@@ -1,0 +1,10 @@
+---
+- name: Create and configure users
+  block:
+
+    - name: Remote hostname check
+      fail:
+        msg: "The hostname is incorrect. Is this the correct machine?"
+      when: ansible_nodename != inventory_hostname
+      tags:
+        - hostname_check

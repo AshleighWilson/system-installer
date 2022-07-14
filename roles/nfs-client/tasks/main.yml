@@ -1,0 +1,8 @@
+---
+- name: Setup and enable NFS client
+  command: echo nfs client
+    # - name: Configure /etc/exports
+    # - name: Make NFS share directories
+    # - name: Enable nfs-server and maybe rpc-bind?
+    # - name: firewall allow nfs3/nfs4/nfs/mountd/rpc-bind
+
