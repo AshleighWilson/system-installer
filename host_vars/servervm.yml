@@ -1,0 +1,4 @@
+---
+install_drive: /dev/vda
+kernels: linux-lts linux
+hostname: testvm
