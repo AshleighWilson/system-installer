@@ -28,18 +28,40 @@ btrfs:
     #   path: "data"
     #   disable_cow: true
 
-core_packages:
-  - base
-  - base-devel
-  - "{{ kernels }}"
-  - linux-firmware
-  - efibootmgr
-  - grub
-  - grub-btrfs
-  - sudo
-  - networkmanager
-  - neovim
-  - openssh
-  - btrfs-progs
-  - zsh
-  - git
+packages:
+  # Essential packages for a base arch install.
+  base:
+    - base
+    - base-devel
+    - "{{ kernels }}"
+    - linux-firmware
+    - efibootmgr
+    - grub
+    - grub-btrfs
+    - sudo
+    - networkmanager
+    - neovim
+    - openssh
+    - btrfs-progs
+    - zsh
+    - git
+    - python
+
+  # Core packages which are common across all installs.
+  core:
+    - neovim
+    - zsh
+    - git
+    - yadm
+    - htop
+    - lazygit
+    - ripgrep
+    - wget
+    - npm
+
+  # Core npm packages which are common across all installs.
+  core_npm:
+    - pyright
+    - bash-language-server
+    - yaml-language-server
+    # TODO: - lua-language-server
