@@ -13,8 +13,8 @@ keyboard --vckeymap=gb --xlayouts='gb'
 lang en_GB.UTF-8
 
 # Network information
-network  --bootproto=dhcp --device=enp1s0 --ipv6=auto --activate
-network  --hostname=servervm
+network  --bootproto=dhcp --device=enp2s0 --ipv6=auto --activate
+network  --hostname=server
 
 %packages
 @^minimal-environment
@@ -24,11 +24,11 @@ network  --hostname=servervm
 firstboot --enable
 
 # Disk configuration
-ignoredisk --interactive
+ignoredisk --only-use=sda
 clearpart --all
-part /boot --fstype="ext4" --ondisk=vda --size=1024
+part /boot --fstype="ext4" --ondisk=sda --size=1024
 part swap --hibernation
-part btrfs.01 --fstype="btrfs" --ondisk=vda --grow
+part btrfs.01 --fstype="btrfs" --ondisk=sda --grow
 btrfs none --label=fedora btrfs.01
 btrfs / --subvol --name=/@ LABEL=fedora
 btrfs /home --subvol --name=@home LABEL=fedora
