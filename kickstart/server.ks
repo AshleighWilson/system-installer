@@ -43,7 +43,7 @@ btrfs /.snapshots/ --subvol --name=@.snapshots LABEL=fedora
 btrfs /opt --subvol --name=@opt LABEL=fedora
 btrfs /tmp --subvol --name=@tmp LABEL=fedora
 btrfs /var --subvol --name=@var LABEL=fedora
-btrfs /usr/local --subvol --name=@usr/local LABEL=fedora
+btrfs /usr/local --subvol --name=@usr-local LABEL=fedora
 
 # System timezone
 timezone Europe/London --utc
