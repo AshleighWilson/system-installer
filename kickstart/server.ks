@@ -27,7 +27,6 @@ firstboot --enable
 ignoredisk --only-use=sda
 clearpart --all
 part /boot --fstype="ext4" --ondisk=sda --size=1024
-part swap --hibernation
 part btrfs.01 --fstype="btrfs" --ondisk=sda --grow
 
 # Create btrfs main volume and subvolumes
