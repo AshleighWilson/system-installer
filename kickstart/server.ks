@@ -29,10 +29,22 @@ clearpart --all
 part /boot --fstype="ext4" --ondisk=sda --size=1024
 part swap --hibernation
 part btrfs.01 --fstype="btrfs" --ondisk=sda --grow
+
+# Create btrfs main volume and subvolumes
+# @				- root subvolume
+# @home			- user data, exclude from snapshots to prevent data loss on rollback.
+# @opt			- third part products, also exclude from snapshots to prevent data loss.
+# @tmp			- temporary files,  not required to snapshot.
+# @var			- logs, caches, etc, not required to snapshot. Also disable CoW for this directory.
+# @usr/local	- software that was manually installed.
 btrfs none --label=fedora btrfs.01
-btrfs / --subvol --name=/@ LABEL=fedora
+btrfs / --subvol --name=@ LABEL=fedora
 btrfs /home --subvol --name=@home LABEL=fedora
 btrfs /.snapshots/ --subvol --name=@.snapshots LABEL=fedora
+btrfs /opt --subvol --name=@opt LABEL=fedora
+btrfs /tmp --subvol --name=@tmp LABEL=fedora
+btrfs /var --subvol --name=@var LABEL=fedora
+btrfs /usr/local --subvol --name=@usr/local LABEL=fedora
 
 # System timezone
 timezone Europe/London --utc
