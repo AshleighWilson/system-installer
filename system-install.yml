@@ -1,0 +1,21 @@
+---
+- hosts: all
+  roles:
+    - prechecks
+    - core
+    - users
+    - snapper
+    - dotfiles
+    - firewalld
+    - storage
+
+- hosts: servervm,server
+  roles:
+    - nfs-server
+    - docker
+    # - virtualization
+
+- hosts: fractal,xps
+  roles:
+    - nfs-client
+
