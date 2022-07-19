@@ -1,0 +1,28 @@
+---
+- name: Firewalld configuration
+  block:
+
+    - name: Firewalld default zone
+      firewalld:
+        zone: "{{ firewall.zone }}"
+        state: present
+        permanent: yes
+        target: "DROP"
+
+    - name: Firewalld allowed services
+      firewalld:
+        service: ssh
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: "Set default firewalld zone to {{ firewall.zone }}"
+      command: "firewall-cmd --set-default-zone={{ firewall.zone }}"
+      register: zone_result
+      changed_when: "not 'ZONE_ALREADY_SET' in zone_result.stderr"
+
+    - name: Reload firewalld to apply changes
+      shell: firewall-cmd --reload || /bin/true
+      register: result
+      failed_when: "not 'success' in result.stdout"
+      changed_when: "not 'ZONE_ALREADY_SET' in zone_result.stderr"
