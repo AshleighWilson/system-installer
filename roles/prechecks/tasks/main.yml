@@ -1,5 +1,5 @@
 ---
-- name: Create and configure users
+- name: Carry out checks before system install
   block:
 
     - name: Remote hostname check
