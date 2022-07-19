@@ -7,7 +7,12 @@ root_part: "{{ install_drive }}2"
 
 user:
   name: ashleigh
-  password: pass
+  fullname: Ashleigh Wilson
+  password: $6$BHk8btTk/MWBZrq4$XPz1EEw2n/Yi4kvXovgjHkSY9Fx3apH3MrDFhHutWZgMi7GsO6jmEIqOH.zbeh6kug/dSxLRqmr36qxkwdgF8/
+  uid: 1000
+  gid: 1000
+  groups: wheel
+  shell: /bin/zsh
 
 timezone: Europe/London
 
@@ -33,7 +38,6 @@ packages:
   base:
     - base
     - base-devel
-    - "{{ kernels }}"
     - linux-firmware
     - efibootmgr
     - grub
@@ -58,6 +62,8 @@ packages:
     - ripgrep
     - wget
     - npm
+    - gcc
+    - g++
 
   # Core npm packages which are common across all installs.
   core_npm:
