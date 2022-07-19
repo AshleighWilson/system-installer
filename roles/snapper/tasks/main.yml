@@ -1,0 +1,48 @@
+---
+- name: Install and configure snapper
+  block:
+
+    - name: Install snapper packages
+      dnf:
+        name: snapper, python3-dnf-plugin-snapper
+        state: present
+
+    - name: Unmount /.snapshots/
+      mount:
+        path: /.snapshots/
+        state: unmounted
+
+    - name: Delete /.snapshots/ directory
+      file:
+        path: /.snapshots/
+        state: absent
+
+    - name: Create new snapper configuration at /
+      command: snapper -c root create-config /
+      register: result
+      failed_when: result.rc != 0 and result.rc != 1
+
+    - name: Delete snapper#s /.snapshots subvolume
+      command: btrfs subvolume delete /.snapshots/
+
+    - name: Create /.snapshots/ directory for existing subvolume
+      file:
+        path: /.snapshots/
+        state: directory
+
+    - name: Reload systemctl
+      systemd:
+        daemon_reload: yes
+
+    - name: Mount all filesystems
+      command: mount -a
+
+    - name: Allow normal user to list snapshots
+      command: "snapper -c root set-config ALLOW_USERS={{ user.name }} SYNC_ACL=yes"
+
+    - name: Change group permission on /.snapshots directory
+      command: "chown -R :{{ user.name }} /.snapshots/"
+
+    - name: Update grub.cfg
+      command: grubby --update-kernel=ALL --remove-args="rootflags=subvol=@"
+  when: not snapper_root.stat.exists
