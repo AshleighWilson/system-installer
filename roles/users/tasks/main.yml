@@ -7,18 +7,23 @@
 
     - name: Create user groups
       group:
-        name: ashleigh
+        name: "{{ user.name }}"
         state: present
-        gid: 1000
+        gid: "{{ user.gid }}"
 
     - name: Create users
       user:
-        name: ashleigh
-        comment: Ashleigh Wilson
-        uid: 1000
-        group: ashleigh
-        groups: wheel
+        name: "{{ user.name }}"
+        comment: "{{ user.fullname }}"
+        uid: "{{ user.uid }}"
+        group: "{{ user.name }}"
+        groups: "{{ user.groups }}"
         append: yes
         shell: /bin/zsh
-        password: $6$BHk8btTk/MWBZrq4$XPz1EEw2n/Yi4kvXovgjHkSY9Fx3apH3MrDFhHutWZgMi7GsO6jmEIqOH.zbeh6kug/dSxLRqmr36qxkwdgF8/
+        password: "{{ user.password }}"
 
+    - name: Create authorized keys
+      authorized_key:
+        user: ashleigh
+        state: present
+        key: "{{ lookup('file', '/home/{{ user.name }}/.ssh/id_rsa.pub') }}"
