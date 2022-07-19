@@ -1,4 +1,9 @@
 ---
+- name: Check if snapper is already configured
+  stat:
+    path: /etc/snapper/configs/root
+  register: snapper_root
+
 - name: Install and configure snapper
   block:
 
