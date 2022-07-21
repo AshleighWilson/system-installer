@@ -1,0 +1,88 @@
+---
+- name: Virtualization
+  block:
+
+    - name: Install libvirt, qemu and utils
+      dnf:
+        name: "{{ item }}" 
+        state: present
+      loop:
+        - libvirt-daemon-config-network
+        - libvirt-daemon-driver-qemu
+        - libvirt-daemon-driver-storage
+        - qemu-kvm-core
+        - edk2-ovmf
+        - bridge-utils
+        - usbredir
+        - qemu-device-usb-redirect
+
+    - name: "Disabling autoconnect for {{ network.device }}"
+      nmcli:
+        conn_name: "{{ item }}"
+        autoconnect: no
+        type: ethernet
+        state: present
+      loop:
+        - "{{ network.device }}"
+
+    - name: Create network bridge
+      nmcli:
+        conn_name: "br0"
+        type: bridge
+        autoconnect: yes
+        ifname: br0
+        stp: no
+        ip4: 192.168.1.2
+        gw4: 192.168.1.1
+        dns4: 8.8.8.8
+        state: present
+
+    - name: Create network bridge slave
+      nmcli:
+        conn_name: "home"
+        type: bridge-slave
+        autoconnect: yes
+        ifname: "{{ network.device }}"
+        master: br0
+        state: present
+
+    - name: Restart NetworkManager.service
+      systemd:
+        name: NetworkManager.service
+        state: restarted
+        enabled: True
+
+    - name: Deleting network manager connections
+      nmcli:
+        conn_name: "{{ item }}"
+        state: absent
+      loop:
+        - "{{ network.device }}"
+        - "Wired connection 1"
+
+    - name: Adder user to libvirt group
+      user:
+        name: ashleigh
+        groups: libvirt
+        append: yes
+
+    - name: Configure libvirt user
+      lineinfile:
+        path: /etc/libvirt/qemu.conf
+        regexp: "^#user =.*"
+        line: 'user = "ashleigh"'
+
+    - name: Configure libvirt group
+      lineinfile:
+        path: /etc/libvirt/qemu.conf
+        regexp: "^#group =.*"
+        line: 'group = "ashleigh"'
+
+    - name: Enable and start libvirtd services
+      systemd:
+        name: libvirtd.service
+        state: started
+        enabled: True
+      loop:
+        - libvirtd.service
+        - virtstoraged.service
