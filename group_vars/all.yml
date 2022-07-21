@@ -64,6 +64,7 @@ packages:
     - npm
     - gcc
     - g++
+    - cronie
 
   # Core npm packages which are common across all installs.
   core_npm:
