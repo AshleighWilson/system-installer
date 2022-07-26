@@ -2,6 +2,17 @@
 - name: Common configuration
   block:
 
+    - name: Configure dnf
+      lineinfile:
+        path: /etc/dnf/dnf.conf
+        insertafter: "[main]"
+        line: "{{ item }}"
+      loop:
+        - "fastestmirror=True"
+        - "max_parallel_downloads=10"
+        - "defaultyes=True"
+        - "keepcache=True"
+
     - name: Add yadm repository
       yum_repository:
         name: yadm
@@ -10,7 +21,7 @@
         gpgcheck: no
 
     - name: Add lazygit repository
-      community.general.copr:
+      copr:
         name: atim/lazygit
 
     - name: Install core software
