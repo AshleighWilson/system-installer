@@ -21,7 +21,7 @@
         gpgcheck: no
 
     - name: Add lazygit repository
-      copr:
+      community.general.copr:
         name: atim/lazygit
 
     - name: Install core software
