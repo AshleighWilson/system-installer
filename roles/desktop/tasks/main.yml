@@ -1,0 +1,85 @@
+---
+- name: Desktop specific configuration
+  block:
+
+    - name: Configure systemd-resolved
+      lineinfile:
+        path: /etc/systemd/resolved.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop:
+        - { regexp: "^#DNS=.*", line: "DNS=192.168.1.85" }
+        - { regexp: "^#Cache=.*", line: "Cache=no" }
+
+    - name: Install RPM Fusion
+      dnf:
+        name: "{{ item }}"
+        state: present
+        disable_gpg_check: yes
+      when: ansible_distribution == "Fedora"
+      loop:
+        - "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ansible_distribution_major_version}}.noarch.rpm"
+        - "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ansible_distribution_major_version}}.noarch.rpm"
+        - "@core"
+
+    - name: Set up multimedia complement packages for gstreamer applications
+      dnf:
+        name: "@multimedia"
+        state: present
+        install_weak_deps: no
+        exclude: PackageKit-gstreamer-plugin
+
+    - name: Setup sound and video complement packages
+      dnf:
+        name: "@sound-and-video"
+        state: present
+
+    - name: Add flathub repo to flatpak
+      community.general.flatpak_remote:
+        name: flathub
+        state: present
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+
+    - name: Install desktop software
+      dnf:
+        name: "{{ packages.desktop }}"
+        state: present
+
+    - name: Copy private ssh files
+      copy:
+        src: "/home/ashleigh/.ssh/{{ item }}"
+        dest: $HOME/.ssh/
+        owner: "{{ user.name }}"
+        group: "{{ user.name }}"
+        mode: preserve
+      loop:
+        - config
+        - id_rsa.pub
+        - personal.keyx
+
+    - name: Copy keepass database
+      copy:
+        src: "/home/ashleigh/Nextcloud/Apps/KeePassXC/Personal.kdbx"
+        dest: $HOME/Nextcloud/Apps/KeePassXC/
+        owner: "{{ user.name }}"
+        group: "{{ user.name }}"
+        mode: preserve
+
+    - name: Add adw-gtk3 repository
+      community.general.copr:
+        name: nickavem/adw-gtk3
+
+    - name: Install adw-gtk3 software
+      dnf:
+        name: "adw-gtk3"
+        state: present
+        enablerepo: nickavem/adw-gtk3
+
+    - name: Disable authselect
+      command: authselect opt-out
+
+    - name: Configure /etc/nsswitch.conf
+      ansible.builtin.lineinfile:
+        path: /etc/nsswitch.conf
+        regexp: '^hosts:'
+        line: "hosts:    files myhostname mdns4_minimal dns [NOTFOUND=return] resolve [!UNAVAIL=return] dns"
