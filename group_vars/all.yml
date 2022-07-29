@@ -13,6 +13,11 @@ user:
   gid: 1000
   groups: wheel
   shell: /bin/zsh
+  files:
+    - { from: .ssh/config, to: .ssh/ }
+    - { from: .ssh/id_rsa.pub, to: .ssh/ }
+    - { from: .ssh/personal.keyx, to: .ssh/ }
+    - { from: Nextcloud/Apps/KeePassXC/Personal.kdbx, to: '' }
 
 timezone: Europe/London
 
@@ -72,3 +77,16 @@ packages:
     - bash-language-server
     - yaml-language-server
     # TODO: - lua-language-server
+  
+  desktop:
+    - file-roller
+    - gvfs-nfs
+    - gnome-tweaks
+    # - TODO: adw-gtk3-git
+    # - TODO: gst-libav
+    - gparted
+    - nextcloud-client
+    - nextcloud-client-nautilus
+    - keepassxc
+
+

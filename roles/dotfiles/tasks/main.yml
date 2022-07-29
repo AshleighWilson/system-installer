@@ -8,11 +8,25 @@
         cmd: yadm clone https://github.com/AshleighWilson/dotfiles.git
         creates: $HOME/.local/share/yadm/repo.git/
 
+    - name: Show untracked files with yadm
+      command: yadm gitconfig --unset status.showUntrackedFiles
+      register: result
+      failed_when: result.rc != 0 and result.rc != 5
+
     - name: Clone dotfiles submodules
       command:
         chdir: $HOME
         cmd: yadm submodule update --init
         creates: $HOME/.local/share/zinit/zinit.zsh
+    
+    - name: Copy personal files
+      ansible.builtin.copy:
+        src: "{{ lookup('env','HOME') }}/{{ item.from }}"
+        dest: "$HOME/{{ item.to }}"
+        owner: "{{ user.name }}"
+        group: "{{ user.name }}"
+        mode: preserve
+      loop: "{{ user.files }}"
 
   become: true
-  become_user: ashleigh
+  become_user: "{{ user.name }}"
