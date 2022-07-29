@@ -48,6 +48,33 @@
     - name: Change group permission on /.snapshots directory
       command: "chown -R :{{ user.name }} /.snapshots/"
 
+    - name: Get root ID of /
+      command: btrfs inspect rootid /
+      register: rootid
+
+    - name: Set default subvolume
+      command: btrfs subvolume set-default {{ rootid.stdout }} /
+
     - name: Update grub.cfg
       command: grubby --update-kernel=ALL --remove-args="rootflags=subvol=@"
+
+    - name: Check if snapper is already configured for /home
+      stat:
+        path: /etc/snapper/configs/home
+      register: snapper_home
+
+    - name: Create snapper configuration for /home 
+      command: snapper -c home create-config /home/
+      when: not snapper_home.stat.exists
+
+    - name: Configure snapper /home
+      command: snapper -c home set-config SYNC_ACL=yes ALLOW_USERS={{ user.name }}
+      when: not snapper_home.stat.exists
+
+    - name: Create initial snapshots
+      command: "snapper -c {{ item }} create --description 'initial snapshot'"
+      loop:
+        - root
+        - home
+
   when: not snapper_root.stat.exists
