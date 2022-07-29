@@ -1,0 +1,18 @@
+---
+install_drive: /dev/null
+hostname: xps
+
+firewall:
+  zone: home
+
+network:
+  device:  
+
+# disks:
+#   additional:
+#     - name: Data Storage
+#       path: /mnt/data
+#       device: UUID=0c3044be-9ff6-4a13-bc56-73b0d9eea92b
+#       fstype: btrfs
+#       opts: defaults
+#       state: mounted 
