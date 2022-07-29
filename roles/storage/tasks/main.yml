@@ -7,3 +7,4 @@
     opts: "{{ item.opts }}"
     state: "{{ item.state }}"
   loop: "{{ disks.additional }}"
+  when: disks.additional is defined
