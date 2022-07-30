@@ -5,7 +5,9 @@
       package:
         name:
           - nfs-utils
+    # - name: Uncomment and change domain in /etc/idmapd.conf. Maybe?
     # - name: Configure /etc/exports
+    #
     # - name: Make NFS share directories
     - name: Start nfs-server.service
       systemd:
@@ -14,4 +16,7 @@
         enabled: true
     # - name: Enable nfs-server and maybe rpc-bind?
     # - name: firewall allow nfs3/nfs4/nfs/mountd/rpc-bind
+    # sudo systemctl enable --now rpcbind nfs-server
+    # sudo firewall-cmd --add-service=nfs
+    # sudo firewall-cmd --runtime-to-permanent
 
