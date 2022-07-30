@@ -1,0 +1,17 @@
+---
+ - name: Gnome
+   command: echo TODO Gnome Role
+# - name: Install gnome
+#   dnf:
+#     name: "@gnome"
+#     state: present
+#
+# - name: Start gdm service
+#   systemd:
+#     name: gdm.service
+#     enabled: yes
+#
+# - name: Set graphical target on boot
+#   command: systemctl set-default graphical.target
+
+
