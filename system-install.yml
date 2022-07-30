@@ -4,7 +4,6 @@
     - prechecks
     - core
     - users
-    - snapper
     - dotfiles
     - firewalld
     - storage
@@ -18,4 +17,18 @@
 - hosts: fractal,xps
   roles:
     - nfs-client
+    - gnome
+    - desktop
+
+# Install snapper and create initial snapshots of fresh install
+- hosts: all
+  roles:
+    - snapper
+
+# TODO:
+# nerd-fonts-roboto-mono
+# phinger-cursors
+# tela-icon-theme
+# qt5-wayland
+#
 
