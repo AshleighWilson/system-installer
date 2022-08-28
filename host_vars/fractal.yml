@@ -1,0 +1,10 @@
+---
+install_drive: /dev/nvme1n1
+hostname: fractal
+
+firewall:
+  zone: home
+
+network:
+  device:  
+
