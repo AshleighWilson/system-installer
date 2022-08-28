@@ -154,7 +154,7 @@
             select_mirrors
 
         - name: Install base packages, kernel and firmware
-          command: pacstrap /mnt base {{ kernels}} linux-firmware {{ core_packages | join(' ') }}
+          command: pacstrap /mnt base linux linux-firmware {{ packages.core | join(' ') }}
 
         - name: Install Intel microcode
           command: arch-chroot /mnt pacman -S intel-ucode --noconfirm
