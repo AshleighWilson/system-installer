@@ -2,8 +2,8 @@
 ansible_python_interpreter: /usr/bin/env python3
 ansible_user: root
 
-boot_part: "{{ install_drive }}1"
-root_part: "{{ install_drive }}2"
+boot_part: "{{ install_drive }}p1"
+root_part: "{{ install_drive }}p2"
 
 user:
   name: ashleigh
@@ -11,13 +11,17 @@ user:
   password: $6$BHk8btTk/MWBZrq4$XPz1EEw2n/Yi4kvXovgjHkSY9Fx3apH3MrDFhHutWZgMi7GsO6jmEIqOH.zbeh6kug/dSxLRqmr36qxkwdgF8/
   uid: 1000
   gid: 1000
-  groups: wheel
+  groups: wheel,data
   shell: /bin/zsh
   files:
     - { from: .ssh/config, to: .ssh/ }
     - { from: .ssh/id_rsa.pub, to: .ssh/ }
     - { from: .ssh/personal.keyx, to: .ssh/ }
     - { from: Nextcloud/Apps/KeePassXC/Personal.kdbx, to: '' }
+
+system:
+  groups:
+    - { group: "data", gid: 1002 }
 
 timezone: Europe/London
 
@@ -39,6 +43,35 @@ btrfs:
     #   disable_cow: true
 
 packages:
+  arch:
+    core:
+      - zsh
+      - git
+      - yadm
+      - htop
+      - lazygit
+      - ripgrep
+      - wget
+      - npm
+      - gcc
+      - neovim
+      - steam
+      - keepassxc
+      - firefox
+      - gnome-browser-connector
+      - nextcloud-client
+      - python-pip
+      - adw-gtk3-git
+      - tela-icon-theme-git
+      - vmware-workstation
+      - nfs-utils
+      - linux-headers
+      - gthumb
+      - ffmpegthumbs
+
+
+  # sudo systemctl enable --now vmware-networks.service vmware-usbarbitrator.service
+      
   # Essential packages for a base arch install.
   base:
     - base
@@ -68,8 +101,9 @@ packages:
     - wget
     - npm
     - gcc
-    - g++
+    # - g++
     - cronie
+    - networkmanager
 
   # Core npm packages which are common across all installs.
   core_npm:
@@ -88,5 +122,7 @@ packages:
     - nextcloud-client
     - nextcloud-client-nautilus
     - keepassxc
+    # - steam
+    # - ansible
 
 
