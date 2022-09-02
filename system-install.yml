@@ -3,27 +3,27 @@
   roles:
     - prechecks
     - core
-    - users
-    - dotfiles
-    - firewalld
-    - storage
+ #   - users
+ #   - dotfiles
+ #   - firewalld
+ #   - storage
 
-- hosts: servervm,server
-  roles:
-    - nfs-server
-    - docker
+#- hosts: servervm,server
+#  roles:
+#    - nfs-server
+#    - docker
     # - virtualization
 
 - hosts: fractal,xps
   roles:
     - nfs-client
-    - gnome
-    - desktop
+#    - gnome
+#    - desktop
 
 # Install snapper and create initial snapshots of fresh install
-- hosts: all
-  roles:
-    - snapper
+#- hosts: all
+#  roles:
+#    - snapper
 
 # TODO:
 # nerd-fonts-roboto-mono
