@@ -3,7 +3,7 @@
   roles:
     - prechecks
     - core
- #   - users
+    - users
  #   - dotfiles
  #   - firewalld
  #   - storage
@@ -17,7 +17,7 @@
 - hosts: fractal,xps
   roles:
     - nfs-client
-#    - gnome
+    - gnome
 #    - desktop
 
 # Install snapper and create initial snapshots of fresh install
@@ -26,9 +26,7 @@
 #    - snapper
 
 # TODO:
-# nerd-fonts-roboto-mono
-# phinger-cursors
-# tela-icon-theme
-# qt5-wayland
-#
+# configure nautilus settings
+# Add key bindings to open terminal
+# sudo systemctl enable --now vmware-networks.service vmware-usbarbitrator.service
 
