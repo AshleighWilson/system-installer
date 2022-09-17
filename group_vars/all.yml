@@ -8,7 +8,6 @@ root_part: "{{ install_drive }}p2"
 user:
   name: ashleigh
   fullname: Ashleigh Wilson
-  password: $6$BHk8btTk/MWBZrq4$XPz1EEw2n/Yi4kvXovgjHkSY9Fx3apH3MrDFhHutWZgMi7GsO6jmEIqOH.zbeh6kug/dSxLRqmr36qxkwdgF8/
   uid: 1000
   gid: 1000
   groups: wheel,data
@@ -17,30 +16,13 @@ user:
     - { from: .ssh/config, to: .ssh/ }
     - { from: .ssh/id_rsa.pub, to: .ssh/ }
     - { from: .ssh/personal.keyx, to: .ssh/ }
-    - { from: Nextcloud/Apps/KeePassXC/Personal.kdbx, to: '' }
+    - { from: Nextcloud/Apps/KeePassXC/Personal.kdbx, to: Nextcloud/Apps/KeePassXC/ }
 
 system:
   groups:
     - { group: "data", gid: 1002 }
 
 timezone: Europe/London
-
-btrfs:
-  enabled: true
-  subvolumes:
-    - subvolume: "@snapshots"
-      path: "/.snapshosts"
-    - subvolume: "@home"
-      path: "/home"
-    - subvolume: "@log"
-      path: "/var/log"
-    - subvolume: "@cache"
-      path: "/var/cache"
-    # - subvolume: "@tmp"
-    #   path: "/var/tmp"
-    # - subvolume: "@data"
-    #   path: "data"
-    #   disable_cow: true
 
 packages:
   arch:
@@ -68,61 +50,81 @@ packages:
       - linux-headers
       - gthumb
       - ffmpegthumbs
+      - ncdu
+      - gst-libav # H264 codec
+      - fd # optional dependency for neovim
+      - lua-language-server
+      - yaml-language-server
+      - bash-language-server
+      - pyright
+      - gnome-tweaks
+      - gparted
+      - ansible
+      - phinger-cursors
+      - nerd-fonts-complete
+      - qt5-wayland
+      - sshpass
+      - bluez
 
+services:
+  - bluetooth.service
 
-  # sudo systemctl enable --now vmware-networks.service vmware-usbarbitrator.service
-      
-  # Essential packages for a base arch install.
-  base:
-    - base
-    - base-devel
-    - linux-firmware
-    - efibootmgr
-    - grub
-    - grub-btrfs
-    - sudo
-    - networkmanager
-    - neovim
-    - openssh
-    - btrfs-progs
-    - zsh
-    - git
-    - python
+settings:
+  gnome:
+    # wallpaper
+    - { key: "/org/gnome/desktop/background/picture-uri", value: "'file:///home/ashleigh/.local/share/backgrounds/2022-06-10-19-33-29-fox-forest.jpg'" }
+   
+    # window titlebar buttons
+    - { key: "/org/gnome/desktop/wm/preferences/button-layout", value: "'appmenu:minimize,close'"}
 
-  # Core packages which are common across all installs.
-  core:
-    - neovim
-    - zsh
-    - git
-    - yadm
-    - htop
-    - lazygit
-    - ripgrep
-    - wget
-    - npm
-    - gcc
-    # - g++
-    - cronie
-    - networkmanager
+    # disable automatic screen brightness
+    - { key: "/org/gnome/settings-daemon/plugins/power/ambient-enabled", value: "false"}
 
-  # Core npm packages which are common across all installs.
-  core_npm:
-    - pyright
-    - bash-language-server
-    - yaml-language-server
-    # TODO: - lua-language-server
-  
-  desktop:
-    - file-roller
-    - gvfs-nfs
-    - gnome-tweaks
-    # - TODO: adw-gtk3-git
-    # - TODO: gst-libav
-    - gparted
-    - nextcloud-client
-    - nextcloud-client-nautilus
-    - keepassxc
-    # - steam
-    # - ansible
+    # enable gnome extensions
+    - { key: "/org/gnome/shell/enabled-extensions", value: "[
+          'caffeine@patapon.info',
+          'blur-my-shell@aunetx',
+          'hibernate-status@dromi',
+          'trayIconsReloaded@selfmade.pl',
+          'dash-to-dock@micxgx.gmail.com'
+        ]"}
 
+    # configure favourite apps on the dock
+    - { key: "/org/gnome/shell/favorite-apps", value: "[
+          'org.gnome.Nautilus.desktop',
+          'Alacritty.desktop',
+          'firefox.desktop',
+          'thunderbird.desktop',
+          'org.keepassxc.KeePassXC.desktop',
+          'org.gnome.Calendar.desktop'
+        ]"}
+    
+    # dock transparency
+    - { key: "/org/gnome/shell/extensions/dash-to-dock/background-opacity", value: "0.0"}
 
+    # max icon size
+    - { key: "/org/gnome/shell/extensions/dash-to-dock/dash-max-icon-size", value: "48"}
+    
+    # isolate workspaces
+    - { key: "/org/gnome/shell/extensions/dash-to-dock/isolate-workspaces", value: "true"}
+
+    # app running indicator
+    - { key: "/org/gnome/shell/extensions/dash-to-dock/running-indicator-style", value: "'DOTS'"}
+    
+    # show favourite apps on dock
+    - { key: "/org/gnome/shell/extensions/dash-to-dock/show-favorites", value: "true"}
+    
+    # hide the show apps button on dock
+    - { key: "/org/gnome/shell/extensions/dash-to-dock/show-show-apps-button", value: "false"}
+    
+    # dock transparency mode
+    - { key: "/org/gnome/shell/extensions/dash-to-dock/transparency-mode", value: "'FIXED'"}
+    
+    # gtk theme
+    - { key: "/org/gnome/desktop/interface/gtk-theme", value: "'adw-gtk3'"}
+    
+    # icon theme
+    - { key: "/org/gnome/desktop/interface/icon-theme", value: "'Tela-purple'"}
+    
+
+    # - { key: , value: }
