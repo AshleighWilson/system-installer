@@ -1,29 +1,93 @@
 ---
-- name: Create and configure users
+- name: Delete default /etc/skel files
+  become: yes
+  file: path=/etc/skel state=absent
+
+- name: Create user group
+  become: yes
+  group:
+    name: "{{ user.name }}"
+    state: present
+    gid: "{{ user.gid }}"
+
+- name: Create other groups
+  become: yes
+  loop: "{{ system.groups }}"
+  group:
+    name: "{{ item.group }}"
+    state: present
+    gid: "{{ item.gid }}"
+
+- name: Create normal user
+  become: yes
+  user:
+    name: "{{ user.name }}"
+    comment: "{{ user.fullname }}"
+    uid: "{{ user.uid }}"
+    group: "{{ user.name }}"
+    groups: "{{ user.groups }}"
+    append: yes
+    shell: /bin/zsh
+
+- name: Create authorized keys
+  authorized_key:
+    user: "{{ user.name }}"
+    state: present
+    key: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/id_rsa.pub') }}"
+
+- name: Delete bash config files
+  file: "path={{ item }} state=absent"
+  loop:
+    - .bash_logout
+    - .bash_profile
+    - .bashrc
+    
+- name: Copy private ssh files
+  copy:
+    src: "/home/ashleigh/.ssh/{{ item }}"
+    dest: $HOME/.ssh/
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: preserve
+  loop:
+    - config
+    - id_rsa.pub
+    - personal.keyx
+
+- name: Copy keepass database
+  copy:
+    src: "/home/ashleigh/Nextcloud/Apps/KeePassXC/Personal.kdbx"
+    dest: $HOME/Nextcloud/Apps/KeePassXC/
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: preserve
+    
+- name: Clone dotfiles and setup user directory
   block:
 
-    - name: Delete default /etc/skel files
-      file: path=/etc/skel state=absent
+    - name: Clone dotfiles
+      command:
+        chdir: $HOME
+        cmd: yadm clone https://github.com/AshleighWilson/dotfiles.git
+        creates: $HOME/.local/share/yadm/repo.git/
 
-    - name: Create user group
-      group:
-        name: "{{ user.name }}"
-        state: present
-        gid: "{{ user.gid }}"
+    - name: Clone dotfiles submodules
+      command:
+        chdir: $HOME
+        cmd: yadm submodule update --init
+        creates: $HOME/.local/share/zinit/zinit.zsh
 
-    - name: Create normal user
-      user:
-        name: "{{ user.name }}"
-        comment: "{{ user.fullname }}"
-        uid: "{{ user.uid }}"
+    - name: Show untracked files with yadm
+      command: yadm gitconfig --unset status.showUntrackedFiles
+      register: result
+      failed_when: result.rc != 0 and result.rc != 5
+      changed_when: result.rc == 0
+    
+    - name: Copy personal files
+      loop: "{{ user.files }}"
+      ansible.builtin.copy:
+        src: "{{ lookup('env','HOME') }}/{{ item.from }}"
+        dest: "$HOME/{{ item.to }}"
+        owner: "{{ user.name }}"
         group: "{{ user.name }}"
-        groups: "{{ user.groups }}"
-        append: yes
-        shell: /bin/zsh
-        password: "{{ user.password }}"
-
-    - name: Create authorized keys
-      authorized_key:
-        user: "{{ user.name }}"
-        state: present
-        key: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/id_rsa.pub') }}"
+        mode: preserve
