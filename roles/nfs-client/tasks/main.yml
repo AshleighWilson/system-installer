@@ -1,21 +1,18 @@
 ---
 - name: Create NFS mount directory
+  become: yes
   file:
     path: /mnt/data
     state: directory
     mode: '0755'
-  become: yes
 
 - name: Setup and enable NFS client
+  become: yes
   mount:
     src: 192.168.1.2:/mnt/data
     path: /media/Data
     opts: noauto,user,_netdev,bg
-    state: mounted
+    state: present
     fstype: nfs
-  become: yes
-    # - name: Configure /etc/exports
-    # - name: Make NFS share directories
-    # - name: Enable nfs-server and maybe rpc-bind?
-    # - name: firewall allow nfs3/nfs4/nfs/mountd/rpc-bind
+    boot: no
 
