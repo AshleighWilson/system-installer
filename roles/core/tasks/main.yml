@@ -1,32 +1,61 @@
 ---
-- name: Create the `aur_builder` user
+- name: Install core packages on Arch
+  when: ansible_facts['distribution']=="Archlinux" 
   become: yes
-  ansible.builtin.user:
-    name: aur_builder
-    create_home: yes
-    group: wheel
+  # gather_facts: yes
+  block:
 
-- name: Allow the `aur_builder` user to run `sudo pacman` without a password
-  become: yes
-  ansible.builtin.lineinfile:
-    path: /etc/sudoers.d/11-install-aur_builder
-    line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
-    create: yes
-    validate: 'visudo -cf %s'
-    
-- name: Install AUR helper
-  become: yes
-  become_user: aur_builder
-  kewlfft.aur.aur:
-    name: paru
-    use: makepkg
-    state: present
-  
-- name: Install core packages
-  become: yes
-  become_user: aur_builder
-  kewlfft.aur.aur:
-    name: "{{ packages.arch.core }}"
-    use: paru
-    state: present
+    - name: Create the `aur_builder` user
+      ansible.builtin.user:
+        name: aur_builder
+        create_home: yes
+        group: wheel
+
+    - name: Allow the `aur_builder` user to run `sudo pacman` without a password
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers.d/11-install-aur_builder
+        line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
+        create: yes
+        validate: 'visudo -cf %s'
+        
+    - name: Install AUR helper
+      become_user: aur_builder
+      kewlfft.aur.aur:
+        name: paru
+        use: makepkg
+        state: present
+      
+    - name: Install core packages
+      become_user: aur_builder
+      kewlfft.aur.aur:
+        name: "{{ packages.arch.core }}"
+        use: paru
+        state: present
+
+- name: Install core packages on Fedora
+  when: ansible_facts['distribution']=="Fedora"
+  block:
+    - name: Configure dnf
+      lineinfile:
+        path: /etc/dnf/dnf.conf
+        insertafter: "[main]"
+        line: "{{ item }}"
+      loop:
+        - "fastestmirror=True"
+        - "max_parallel_downloads=10"
+        - "defaultyes=True"
+        - "keepcache=True"
+
+    - name: Add yadm repository
+      yum_repository:
+        name: yadm
+        description: yadm repo
+        baseurl: https://download.opensuse.org/repositories/home:TheLocehiliosan:yadm/Fedora_Rawhide/
+        gpgcheck: no
+
+    - name: Install core software
+      dnf:
+        name: "{{ packages.fedora.core }}"
+        state: present
+        enablerepo: yadm
 
