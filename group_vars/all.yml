@@ -25,6 +25,23 @@ system:
 timezone: Europe/London
 
 packages:
+  fedora:
+    core:
+      - zsh
+      - git
+      - yadm
+      - htop
+      - ripgrep
+      - wget
+      - neovim
+      - python3-pip
+    desktop:
+      - alacritty
+      - akmod-nvidia
+      - xorg-x11-drv-nvidia-cuda
+    flatpaks:
+      - com.nextcloud.desktopclient.nextcloud
+      - org.keepassxc.KeePassXC
   arch:
     core:
       - zsh
@@ -120,11 +137,57 @@ settings:
     # dock transparency mode
     - { key: "/org/gnome/shell/extensions/dash-to-dock/transparency-mode", value: "'FIXED'"}
     
+    - { key: "/org/gnome/shell/extensions/dash-to-dock/click-action", value: "'previews'"}
+    - { key: "/org/gnome/shell/extensions/dash-to-dock/dock-position", value: "'BOTTOM'"}
+    - { key: "/org/gnome/shell/extensions/dash-to-dock/height-fraction", value: "0.9"}
+    - { key: "/org/gnome/shell/extensions/dash-to-dock/scroll-action", value: "'cycle-windows'"}
+    - { key: "/org/gnome/shell/extensions/dash-to-dock/show-mounts", value: "false"}
+    - { key: "/org/gnome/shell/extensions/dash-to-dock/show-mounts-only-mounted", value: "false"}
+
     # gtk theme
     - { key: "/org/gnome/desktop/interface/gtk-theme", value: "'adw-gtk3'"}
     
     # icon theme
     - { key: "/org/gnome/desktop/interface/icon-theme", value: "'Tela-purple'"}
     
+    # keyboard layout
+    - { key: "/org/gnome/desktop/input-sources/sources", value: "[('xkb', 'gb')]"}
 
-    # - { key: , value: }
+    # touchpad
+    - { key: "/org/gnome/desktop/peripherals/touchpad/two-finger-scrolling-enabled" , value: "true"}
+    
+    # window manager
+    - { key: "/org/gnome/mutter/edge-tiling", value: "true"}
+
+    # gnome tweaks
+    - { key: "/org/gnome/tweaks/show-extensions-notice" , value: "false" }
+    
+    # nautilus
+    - { key: "/org/gnome/nautilus/preferences/default-folder-viewer" , value: "'icon-view'"}
+    - { key: "/org/gnome/nautilus/preferences/recursive-search" , value: "'always'"}
+    - { key: "/org/gnome/nautilus/preferences/search-view" , value: "'list-view'"}
+    - { key: "/org/gnome/nautilus/preferences/show-directory-item-counts" , value: "'always'"}
+    - { key: "/org/gnome/nautilus/preferences/show-image-thumbnails" , value: "'always'"}
+
+    # key bindings
+    - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding" , value: "'<Super>Return'"}
+    - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command" , value: "'alacritty'"}
+    - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name" , value: "'Terminal'"}
+    
+
+    # blur my shell extension
+    - { key: "/org/gnome/shell/extensions/blur-my-shell/dash-to-dock/blur", value: "false" }
+    - { key: "/org/gnome/shell/extensions/blur-my-shell/panel/blur" , value: "true"}
+
+    # caffeine extension
+    - { key: "/org/gnome/shell/extensions/caffeine/user-enabled", value: "true"}
+
+    # tray icons reload extension
+    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/icon-brightness" , value: "0" }
+    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/icon-contrast" , value: "0" }
+    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/icon-margin-horizontal" , value: "0" }
+    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/icon-padding-horizontal" , value: "0" }
+    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/icon-size" , value: "32"}
+    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/invoke-to-workspace" , value: "true"}
+    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/tray-margin-left" , value: "0" }
+
