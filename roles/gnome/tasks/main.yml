@@ -4,8 +4,10 @@
     name: psutil
 
 - name: Update gnome settings
+  become: yes
+  become_user: "{{ user.name }}"
   loop: "{{ settings.gnome }}" 
   dconf:
     key: "{{ item.key }}"
-    value: "{{ item.value }}"
+    value: "{{ item.value | string }}"
     state: present
