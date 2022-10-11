@@ -1,17 +1,14 @@
 ---
 - name: Delete default /etc/skel files
-  become: yes
   file: path=/etc/skel state=absent
 
 - name: Create user group
-  become: yes
   group:
     name: "{{ user.name }}"
     state: present
     gid: "{{ user.gid }}"
 
 - name: Create other groups
-  become: yes
   loop: "{{ system.groups }}"
   group:
     name: "{{ item.group }}"
@@ -19,7 +16,6 @@
     gid: "{{ item.gid }}"
 
 - name: Create normal user
-  become: yes
   user:
     name: "{{ user.name }}"
     comment: "{{ user.fullname }}"
@@ -43,6 +39,8 @@
     - .bashrc
     
 - name: Copy private ssh files
+  become: yes
+  become_user: "{{ user.name }}"
   copy:
     src: "/home/ashleigh/.ssh/{{ item }}"
     dest: $HOME/.ssh/
@@ -55,6 +53,8 @@
     - personal.keyx
 
 - name: Copy keepass database
+  become: yes
+  become_user: "{{ user.name }}"
   copy:
     src: "/home/ashleigh/Nextcloud/Apps/KeePassXC/Personal.kdbx"
     dest: $HOME/Nextcloud/Apps/KeePassXC/
@@ -63,6 +63,8 @@
     mode: preserve
     
 - name: Clone dotfiles and setup user directory
+  become: yes
+  become_user: "{{ user.name }}"
   block:
 
     - name: Clone dotfiles
