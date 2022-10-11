@@ -18,12 +18,12 @@
   roles:
     - nfs-client
     - gnome
-#    - desktop
+    - desktop
 
 # Install snapper and create initial snapshots of fresh install
-#- hosts: all
-#  roles:
-#    - snapper
+- hosts: all
+  roles:
+    - snapper
 
 # TODO:
 # configure nautilus settings
