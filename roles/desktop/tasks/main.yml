@@ -1,22 +1,23 @@
 ---
 - name: Desktop specific configuration
+  when: ansible_distribution == "Fedora"
   block:
 
-    - name: Configure systemd-resolved
-      lineinfile:
-        path: /etc/systemd/resolved.conf
-        regexp: "{{ item.regexp }}"
-        line: "{{ item.line }}"
-      loop:
-        - { regexp: "^#DNS=.*", line: "DNS=192.168.1.85" }
-        - { regexp: "^#Cache=.*", line: "Cache=no" }
+    # - name: Configure systemd-resolved
+    #   lineinfile:
+    #     path: /etc/systemd/resolved.conf
+    #     regexp: "{{ item.regexp }}"
+    #     line: "{{ item.line }}"
+    #   loop:
+    #     - { regexp: "^#DNS=.*", line: "DNS=192.168.1.85" }
+    #     - { regexp: "^#Cache=.*", line: "Cache=no" }
 
     - name: Install RPM Fusion
+      when: ansible_distribution == "Fedora"
       dnf:
         name: "{{ item }}"
         state: present
         disable_gpg_check: yes
-      when: ansible_distribution == "Fedora"
       loop:
         - "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ansible_distribution_major_version}}.noarch.rpm"
         - "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ansible_distribution_major_version}}.noarch.rpm"
@@ -42,44 +43,49 @@
 
     - name: Install desktop software
       dnf:
-        name: "{{ packages.desktop }}"
+        name: "{{ packages.fedora.desktop }}"
         state: present
 
-    - name: Copy private ssh files
-      copy:
-        src: "/home/ashleigh/.ssh/{{ item }}"
-        dest: $HOME/.ssh/
-        owner: "{{ user.name }}"
-        group: "{{ user.name }}"
-        mode: preserve
-      loop:
-        - config
-        - id_rsa.pub
-        - personal.keyx
+    - name: Install flatpaks
+      community.general.flatpak:
+        name: "{{ packages.fedora.flatpaks }}"
 
-    - name: Copy keepass database
-      copy:
-        src: "/home/ashleigh/Nextcloud/Apps/KeePassXC/Personal.kdbx"
-        dest: $HOME/Nextcloud/Apps/KeePassXC/
-        owner: "{{ user.name }}"
-        group: "{{ user.name }}"
-        mode: preserve
 
-    - name: Add adw-gtk3 repository
-      community.general.copr:
-        name: nickavem/adw-gtk3
+    # - name: Copy private ssh files
+    #   copy:
+    #     src: "/home/ashleigh/.ssh/{{ item }}"
+    #     dest: $HOME/.ssh/
+    #     owner: "{{ user.name }}"
+    #     group: "{{ user.name }}"
+    #     mode: preserve
+    #   loop:
+    #     - config
+    #     - id_rsa.pub
+    #     - personal.keyx
 
-    - name: Install adw-gtk3 software
-      dnf:
-        name: "adw-gtk3"
-        state: present
-        enablerepo: nickavem/adw-gtk3
+    # - name: Copy keepass database
+    #   copy:
+    #     src: "/home/ashleigh/Nextcloud/Apps/KeePassXC/Personal.kdbx"
+    #     dest: $HOME/Nextcloud/Apps/KeePassXC/
+    #     owner: "{{ user.name }}"
+    #     group: "{{ user.name }}"
+    #     mode: preserve
 
-    - name: Disable authselect
-      command: authselect opt-out
-
-    - name: Configure /etc/nsswitch.conf
-      ansible.builtin.lineinfile:
-        path: /etc/nsswitch.conf
-        regexp: '^hosts:'
-        line: "hosts:    files myhostname mdns4_minimal dns [NOTFOUND=return] resolve [!UNAVAIL=return] dns"
+    # - name: Add adw-gtk3 repository
+    #   community.general.copr:
+    #     name: nickavem/adw-gtk3
+    #
+    # - name: Install adw-gtk3 software
+    #   dnf:
+    #     name: "adw-gtk3"
+    #     state: present
+    #     enablerepo: nickavem/adw-gtk3
+    #
+    # - name: Disable authselect
+    #   command: authselect opt-out
+    #
+    # - name: Configure /etc/nsswitch.conf
+    #   ansible.builtin.lineinfile:
+    #     path: /etc/nsswitch.conf
+    #     regexp: '^hosts:'
+    #     line: "hosts:    files myhostname mdns4_minimal dns [NOTFOUND=return] resolve [!UNAVAIL=return] dns"
