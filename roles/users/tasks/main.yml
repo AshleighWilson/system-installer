@@ -37,7 +37,15 @@
     - .bash_logout
     - .bash_profile
     - .bashrc
-    
+
+- name: Create home directory structure
+  become: yes
+  become_user: "{{ user.name }}"
+  file: "path=$HOME/{{ item }} state=directory"
+  loop:
+    - Documents
+    - Downloads
+
 - name: Copy private ssh files
   become: yes
   become_user: "{{ user.name }}"
