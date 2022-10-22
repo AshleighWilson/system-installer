@@ -38,6 +38,7 @@ packages:
       - gcc
       - g++
       - lazygit
+      - ansible
     desktop:
       - alacritty
       - akmod-nvidia
