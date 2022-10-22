@@ -53,6 +53,14 @@
         baseurl: https://download.opensuse.org/repositories/home:TheLocehiliosan:yadm/Fedora_Rawhide/
         gpgcheck: no
 
+    - name: Add personal COPR repos
+      community.general.copr:
+        name: "{{ item }}"
+      loop:
+        - firetramp/all
+        - nickavem/adw-gtk3
+        - atim/lazygit
+
     - name: Install core software
       dnf:
         name: "{{ packages.fedora.core }}"
