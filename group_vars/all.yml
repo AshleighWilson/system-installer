@@ -35,10 +35,19 @@ packages:
       - wget
       - neovim
       - python3-pip
+      - gcc
+      - g++
+      - lazygit
     desktop:
       - alacritty
       - akmod-nvidia
       - xorg-x11-drv-nvidia-cuda
+      - file-roller
+      - file-roller-nautilus
+      - tela-icon-theme # from personal COPR repo
+      - nerd-fonts # from personal COPR repo
+      - adw-gtk3
+      - gnome-tweaks
     flatpaks:
       - com.nextcloud.desktopclient.nextcloud
       - org.keepassxc.KeePassXC
