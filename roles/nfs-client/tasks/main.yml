@@ -2,7 +2,7 @@
 - name: Create NFS mount directory
   become: yes
   file:
-    path: /mnt/data
+    path: /media/Data
     state: directory
     mode: '0755'
 
