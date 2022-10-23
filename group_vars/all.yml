@@ -39,6 +39,10 @@ packages:
       - g++
       - lazygit
       - ansible
+      - copr-cli
+      - fedpkg
+      - sqlite
+      - lua-language-server
     desktop:
       - alacritty
       - akmod-nvidia
