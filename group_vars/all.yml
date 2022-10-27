@@ -38,6 +38,11 @@ packages:
       - gcc
       - g++
       - lazygit
+      - ansible
+      - copr-cli
+      - fedpkg
+      - sqlite
+      - lua-language-server
       - nodejs-bash-language-server
     desktop:
       - alacritty
