@@ -38,6 +38,7 @@ packages:
       - gcc
       - g++
       - lazygit
+      - nodejs-bash-language-server
     desktop:
       - alacritty
       - akmod-nvidia
