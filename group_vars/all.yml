@@ -10,7 +10,7 @@ user:
   fullname: Ashleigh Wilson
   uid: 1000
   gid: 1000
-  groups: wheel,data
+  groups: wheel,data,dialout
   shell: /bin/zsh
   files:
     - { from: .ssh/config, to: .ssh/ }
