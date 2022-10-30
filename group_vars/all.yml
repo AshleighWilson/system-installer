@@ -186,8 +186,9 @@ settings:
 
     # key bindings
     - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding" , value: "'<Super>Return'"}
-    - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command" , value: "'alacritty'"}
+    - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command" , value: "'gnome-terminal'"}
     - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name" , value: "'Terminal'"}
+    - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings", value: "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']" }
 
     # terminal settings
     - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/background-color", value: "'rgb(40,44,52)'" }
