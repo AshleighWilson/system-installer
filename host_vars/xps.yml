@@ -8,6 +8,8 @@ firewall:
 network:
   device:  
 
+font_size: 10
+
 # disks:
 #   additional:
 #     - name: Data Storage

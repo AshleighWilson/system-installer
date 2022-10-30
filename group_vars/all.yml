@@ -188,7 +188,23 @@ settings:
     - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding" , value: "'<Super>Return'"}
     - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command" , value: "'alacritty'"}
     - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name" , value: "'Terminal'"}
-    
+
+    # terminal settings
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/background-color", value: "'rgb(40,44,52)'" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/background-transparency-percent", value: "6" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/cursor-background-color", value: "'rgb(187,194,207)'" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/cursor-colors-set", value: "true" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/cursor-foreground-color", value: "'rgb(40,44,52)'" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/cursor-shape", value: "'block'" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/font", value: "'JetBrainsMono Nerd Font {{ font_size }}'" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/foreground-color", value: "'rgb(187,194,207)'" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/palette", value: "['rgb(40,44,52)', 'rgb(255,108,107)', 'rgb(152,190,101)', 'rgb(236,190,123)', 'rgb(81,175,239)', 'rgb(169,161,225)', 'rgb(70,217,255)', 'rgb(187,194,207)', 'rgb(63,68,74)', 'rgb(255,108,107)', 'rgb(152,190,101)', 'rgb(218,133,72)', 'rgb(81,175,239)', 'rgb(169,161,225)', 'rgb(70,217,255)', 'rgb(239,239,239)']" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/scrollbar-policy", value: "'never'" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/title-mode", value: "'replace'" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/use-system-font", value: "false" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/use-theme-colors", value: "false" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/use-transparent-background", value: "true" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/visible-name", value: "'DoomOne'" }
 
     # blur my shell extension
     - { key: "/org/gnome/shell/extensions/blur-my-shell/dash-to-dock/blur", value: "false" }
