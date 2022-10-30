@@ -54,9 +54,19 @@ packages:
       - nerd-fonts # from personal COPR repo
       - adw-gtk3
       - gnome-tweaks
+      - gnome-extensions-app
     flatpaks:
       - com.nextcloud.desktopclient.nextcloud
       - org.keepassxc.KeePassXC
+    gnome_extensions:
+      - blur-my-shell@aunetx
+      - caffeine@patapon.info
+      - hibernate-status@dromi
+      - appindicatorsupport@rgcjonas.gmail.com
+
+    pip:
+      user:
+        - gnome-extensions-cli
   arch:
     core:
       - zsh
@@ -117,14 +127,13 @@ settings:
           'caffeine@patapon.info',
           'blur-my-shell@aunetx',
           'hibernate-status@dromi',
-          'trayIconsReloaded@selfmade.pl',
-          'dash-to-dock@micxgx.gmail.com'
+          'appindicatorsupport@rgcjonas.gmail.com'
         ]"}
 
     # configure favourite apps on the dock
     - { key: "/org/gnome/shell/favorite-apps", value: "[
           'org.gnome.Nautilus.desktop',
-          'Alacritty.desktop',
+          'org.gnome.Terminal.desktop',
           'firefox.desktop',
           'thunderbird.desktop',
           'org.keepassxc.KeePassXC.desktop',
@@ -213,13 +222,4 @@ settings:
 
     # caffeine extension
     - { key: "/org/gnome/shell/extensions/caffeine/user-enabled", value: "true"}
-
-    # tray icons reload extension
-    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/icon-brightness" , value: "0" }
-    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/icon-contrast" , value: "0" }
-    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/icon-margin-horizontal" , value: "0" }
-    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/icon-padding-horizontal" , value: "0" }
-    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/icon-size" , value: "32"}
-    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/invoke-to-workspace" , value: "true"}
-    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/tray-margin-left" , value: "0" }
 
