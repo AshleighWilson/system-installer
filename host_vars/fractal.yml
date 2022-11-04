@@ -8,3 +8,4 @@ firewall:
 network:
   device:  
 
+font_size: 12

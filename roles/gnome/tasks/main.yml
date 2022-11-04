@@ -3,6 +3,19 @@
   pip:
     name: psutil
 
+- name: Install python packages via pip
+  become: yes
+  become_user: "{{ user.name }}"
+  pip:
+    name: "{{ packages.fedora.pip.user }}"
+    extra_args: --user
+
+- name: Install gnome extensions
+  become: yes
+  become_user: "{{ user.name }}"
+  command: "$HOME/.local/bin/gnome-extensions-cli --backend file install {{ item }}"
+  loop: "{{ packages.fedora.gnome_extensions }}"
+
 - name: Update gnome settings
   become: yes
   become_user: "{{ user.name }}"

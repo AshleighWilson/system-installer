@@ -10,7 +10,7 @@ user:
   fullname: Ashleigh Wilson
   uid: 1000
   gid: 1000
-  groups: wheel,data
+  groups: wheel,data,dialout
   shell: /bin/zsh
   files:
     - { from: .ssh/config, to: .ssh/ }
@@ -56,11 +56,19 @@ packages:
       - nerd-fonts # from personal COPR repo
       - adw-gtk3
       - gnome-tweaks
+      - gnome-extensions-app
     flatpaks:
       - com.nextcloud.desktopclient.nextcloud
       - org.keepassxc.KeePassXC
-    pip: # TODO
-      - pynvim
+    gnome_extensions:
+      - blur-my-shell@aunetx
+      - caffeine@patapon.info
+      - hibernate-status@dromi
+      - appindicatorsupport@rgcjonas.gmail.com
+    pip:
+      user:
+        - gnome-extensions-cli
+        - pynvim
   arch:
     core:
       - zsh
@@ -121,14 +129,13 @@ settings:
           'caffeine@patapon.info',
           'blur-my-shell@aunetx',
           'hibernate-status@dromi',
-          'trayIconsReloaded@selfmade.pl',
-          'dash-to-dock@micxgx.gmail.com'
+          'appindicatorsupport@rgcjonas.gmail.com'
         ]"}
 
     # configure favourite apps on the dock
     - { key: "/org/gnome/shell/favorite-apps", value: "[
           'org.gnome.Nautilus.desktop',
-          'Alacritty.desktop',
+          'org.gnome.Terminal.desktop',
           'firefox.desktop',
           'thunderbird.desktop',
           'org.keepassxc.KeePassXC.desktop',
@@ -190,9 +197,26 @@ settings:
 
     # key bindings
     - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding" , value: "'<Super>Return'"}
-    - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command" , value: "'alacritty'"}
+    - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command" , value: "'gnome-terminal'"}
     - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name" , value: "'Terminal'"}
-    
+    - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings", value: "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']" }
+
+    # terminal settings
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/background-color", value: "'rgb(40,44,52)'" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/background-transparency-percent", value: "6" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/cursor-background-color", value: "'rgb(187,194,207)'" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/cursor-colors-set", value: "true" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/cursor-foreground-color", value: "'rgb(40,44,52)'" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/cursor-shape", value: "'block'" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/font", value: "'JetBrainsMono Nerd Font {{ font_size }}'" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/foreground-color", value: "'rgb(187,194,207)'" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/palette", value: "['rgb(40,44,52)', 'rgb(255,108,107)', 'rgb(152,190,101)', 'rgb(236,190,123)', 'rgb(81,175,239)', 'rgb(169,161,225)', 'rgb(70,217,255)', 'rgb(187,194,207)', 'rgb(63,68,74)', 'rgb(255,108,107)', 'rgb(152,190,101)', 'rgb(218,133,72)', 'rgb(81,175,239)', 'rgb(169,161,225)', 'rgb(70,217,255)', 'rgb(239,239,239)']" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/scrollbar-policy", value: "'never'" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/title-mode", value: "'replace'" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/use-system-font", value: "false" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/use-theme-colors", value: "false" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/use-transparent-background", value: "true" }
+    - { key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/visible-name", value: "'DoomOne'" }
 
     # blur my shell extension
     - { key: "/org/gnome/shell/extensions/blur-my-shell/dash-to-dock/blur", value: "false" }
@@ -200,13 +224,4 @@ settings:
 
     # caffeine extension
     - { key: "/org/gnome/shell/extensions/caffeine/user-enabled", value: "true"}
-
-    # tray icons reload extension
-    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/icon-brightness" , value: "0" }
-    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/icon-contrast" , value: "0" }
-    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/icon-margin-horizontal" , value: "0" }
-    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/icon-padding-horizontal" , value: "0" }
-    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/icon-size" , value: "32"}
-    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/invoke-to-workspace" , value: "true"}
-    - { key: "/org/gnome/shell/extensions/trayIconsReloaded/tray-margin-left" , value: "0" }
 
