@@ -1,5 +1,8 @@
+# If having issues setting up the bridge network look at following link
+# https://lukas.zapletalovi.com/posts/2015/fedora-22-libvirt-with-bridge/
 ---
 - name: Virtualization
+  tags: virt
   block:
 
     - name: Install libvirt, qemu and utils
