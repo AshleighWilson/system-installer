@@ -24,6 +24,17 @@ system:
 
 timezone: Europe/London
 
+firewall:
+  server:
+    interfaces: br0, enp2s0
+    ports:
+    services:
+      - dhcpv6-client
+      - mdns
+      - plex
+      - samba-client
+      - ssh
+
 packages:
   fedora:
     core:
@@ -69,6 +80,9 @@ packages:
       user:
         - gnome-extensions-cli
         - pynvim
+    yarn:
+      global:
+        yaml-language-server # TODO: Add to install script
   arch:
     core:
       - zsh
