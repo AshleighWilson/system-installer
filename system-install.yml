@@ -1,4 +1,5 @@
 ---
+# Initial configuration - required for all hosts.
 - hosts: all
   roles:
     - prechecks
@@ -8,19 +9,21 @@
  #   - firewalld
  #   - storage
 
-#- hosts: servervm,server
-#  roles:
+# Server specific configuration.
+- hosts: server
+  roles:
+     - virtualization
 #    - nfs-server
 #    - docker
-    # - virtualization
 
+# Desktop specific configuration.
 - hosts: fractal,xps
   roles:
     - nfs-client
     - gnome
     - desktop
 
-# Install snapper and create initial snapshots of fresh install
+# Install snapper and create initial snapshots of fresh install.
 - hosts: all
   roles:
     - snapper
